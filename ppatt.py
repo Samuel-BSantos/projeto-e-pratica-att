@@ -19,11 +19,26 @@ def trocar_posicoes(lista, pos1, pos2):
     lista[pos1], lista[pos2] = lista[pos2], lista[pos1]
     return lista
 
+def menuinicial():
+    traco()
+    print("Crie uma conta para iniciar o sistema:")
+    print("1-Cadastrar")
+    
+    escolha = int(input('Escolha um número pra navegar:'))
+    traco()
+
+    if escolha == 1:
+        cadastroinicial()
+
+    else:
+        print('digite um número que tenha nas opções')
+        menuinicial()
+
 def menu():
     traco()
-    print('Bem vindo!\n')
+    print('Bem vindo', nome[0],'!\n')
     print('Digite o número indicado para navegar:\n')
-    print('1-Cadastrar\n',
+    print('1-Cadastrar nova conta\n',
         '2-Conta\n',
         '3-Pix\n',
         '4-Depositar\n',
@@ -50,6 +65,31 @@ def menu():
         print('digite um número que tenha nas opções')
         menu()
         
+def cadastroinicial():
+    traco()
+    print('CADASTRO:\n',
+            '1-Criar conta')
+    escolha = int(input('Escolha um número pra navegar:'))
+    traco()
+
+    if escolha == 1:
+        traco()
+        name = input('Nome:')
+        cpfa = input('CPF:')
+        numeroc = input('Número da conta:')
+        traco()
+
+        saldolista.append(0)
+        nome.append(name)
+        cpf.append(cpfa)
+        numeroconta.append(numeroc)
+
+        menu()
+    
+    else:
+        print('error!!!')
+        menuinicial()
+
 def cadastro():
     traco()
     print('CADASTRO:\n',
@@ -135,7 +175,7 @@ def conta():
 
     elif escolha == 3:
         traco()
-        alterarconta = input('Digite o cpf da conta que você deseja usar')
+        alterarconta = input('Digite o cpf da conta que você deseja usar:')
 
         posicaolista = cpf.index(alterarconta)
         trocar_posicoes(nome,0,posicaolista)
@@ -280,4 +320,4 @@ def extrato():
         print('error!!!')
         menu()
 
-menu()
+menuinicial()
