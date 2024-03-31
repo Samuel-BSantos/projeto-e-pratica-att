@@ -1,19 +1,29 @@
+from datetime import date
+
 escolha = 0
-saldo = 0
+addhist = []
 nome = []
 cpf = []
 numeroconta = []
 saldolista = []
-historicocompras = []
 historicodepositos = []
-datalista = []
-horalista = []
-nomeordem = []
+historicocompras = []
 
 def traco(x = 50):
     for i in range(0, x):
         print("=", end='')
     print("\n")
+
+def historicodep(pre):
+    deposito = [nome[0],pre,date.today()]
+
+    historicodepositos[0].append(deposito)
+
+
+def historico(pre,des):
+    compras = [nome[0],pre,des,date.today()]
+
+    historicocompras[0].append(compras)
 
 def trocar_posicoes(lista, pos1, pos2):
     lista[pos1], lista[pos2] = lista[pos2], lista[pos1]
@@ -38,7 +48,7 @@ def menu():
     traco()
     print('Bem vindo', nome[0],'!\n')
     print('Digite o número indicado para navegar:\n')
-    print('1-Cadastrar nova conta\n',
+    print('1-Adicionar nova conta\n',
         '2-Conta\n',
         '3-Pix\n',
         '4-Depositar\n',
@@ -68,7 +78,7 @@ def menu():
 def cadastroinicial():
     traco()
     print('CADASTRO:\n',
-            '1-Criar conta')
+            '1-Adicionar conta')
     escolha = int(input('Escolha um número pra navegar:'))
     traco()
 
@@ -83,7 +93,7 @@ def cadastroinicial():
         nome.append(name)
         cpf.append(cpfa)
         numeroconta.append(numeroc)
-
+        historicocompras.append(addhist)
         menu()
     
     else:
@@ -92,8 +102,8 @@ def cadastroinicial():
 
 def cadastro():
     traco()
-    print('CADASTRO:\n',
-            '1-Criar conta\n',
+    print('ADD conta:\n',
+            '1-Adicionar conta\n',
             '2-Voltar\n')
     escolha = int(input('Escolha um número pra navegar:'))
     traco()
@@ -109,6 +119,7 @@ def cadastro():
         nome.append(name)
         cpf.append(cpfa)
         numeroconta.append(numeroc)
+        historicocompras.append(addhist)
 
         menu()
     elif escolha ==2:
@@ -124,8 +135,10 @@ def conta():
     print('CONTA:\n',
         '1-Saldo\n',
         '2-Excluir conta\n',
-        '3-Alterar conta\n',
-        '4-Voltar\n')
+        '3-Mudar de conta\n',
+        '4-Alterar conta\n',
+        '5-Informações da conta\n',
+        '6-Voltar\n')
     escolha = int(input('Escolha um número pra navegar:'))
     traco()
 
@@ -159,6 +172,7 @@ def conta():
             del nome[posicaolista]
             del numeroconta[posicaolista]
             del saldolista[posicaolista]
+            del historicocompras[posicaolista]
             del cpf[posicaolista]
 
             print('conta exluida!')
@@ -181,14 +195,68 @@ def conta():
         trocar_posicoes(nome,0,posicaolista)
         trocar_posicoes(numeroconta,0,posicaolista)
         trocar_posicoes(saldolista,0,posicaolista)
+        trocar_posicoes(historicocompras,0,posicaolista)
         trocar_posicoes(cpf,0,posicaolista)
 
-        print('Conta alterada com sucesso!')
+        print('Conta trocada com sucesso!')
         traco()
 
         menu()
 
     elif escolha == 4:
+        traco()
+        localconta = input('Digite o CPF da conta que deseja alterar:')
+
+        indexconta = cpf.index(localconta)
+
+        print('Alterar conta:\n',
+            'Escolha a opcção que deseja alterar:\n',
+            '1-Nome\n',
+            '2-CPF\n',
+            '3-Voltar')
+        
+        escolha = int(input('Escolha um número pra navegar:'))
+        traco()
+
+        if escolha == 1:
+            novonome = input('digite o novo nome:')
+
+            nome[indexconta] = novonome
+            print('Nome alterado com sucesso!')
+            traco()
+            conta()
+        
+        elif escolha == 2:
+            novocpf = input('digite o novo CPF:')
+
+            cpf[indexconta] = novocpf
+            print('CPF alterado com sucesso!')
+            traco()
+            conta()
+        
+        else:
+            print('ERRO!')
+            conta()
+    
+    elif escolha == 5:
+        traco()
+        print('Info:\n',
+            'Nome:',nome[0],'\n',
+            'CPF:',cpf[0],'\n',
+            'Número da conta:',numeroconta[0],'\n',
+            'Saldo:',saldolista[0],'\n\n',
+            '1-Voltar')
+        
+        escolha = int(input('Escolha um número pra navegar:'))
+
+        if escolha == 1:
+            conta()
+        
+        else:
+            print("ERROR!")
+            conta()
+
+    elif escolha == 6:
         #voltar
         menu()
     else:
@@ -209,15 +277,13 @@ def pix():
         compra = float(input('Digite o preço da compra:'))
 
         if saldolista[0] > compra:
-            data = input('Digite o dia més e ano da compra(ex: xx/xx/xxxx):')
-            hora = input('Digite a hora da compra(ex: xx:xx):')
+            destinatario = input('Digite o nome do destinatério:')
+            
+            historico(compra,destinatario)
 
             saldolista[0] = saldolista[0] - compra
 
-            historicocompras.append(compra)
-            horalista.append(hora)
-            datalista.append(data)
-            nomeordem.append(nome)
+            
 
             print('Compra realizada! :D')
             traco()
@@ -250,7 +316,7 @@ def depositar():
         deposito = float(input('Valor a ser depositado:'))
         saldolista[0] = saldolista[0] + deposito
 
-        historicodepositos.append(deposito)
+        historicodep(deposito)
 
         print('Valor depositado! :D\n')
         print('1-Voltar')
@@ -284,25 +350,28 @@ def extrato():
 
     if escolha == 1:
         print('HISTÓRICO(COMPRAS):\n')
+        traco()
+        
+        for y in range(len(historicocompras[0])):
+            print('--nome:',historicocompras[0][y][0],'--Preço:R$',historicocompras[0][y][1],'--destinatário:',historicocompras[0][y][2],'--data:',historicocompras[0][y][3])
+        
+        print('1-Voltar')
+        
+        escolha = int(input('Escolha um número pra navegar:'))
+        traco()
 
-        for x in historicocompras:
-            print(nomeordem[historicocompras.index(x)], 'R$', x, datalista[historicocompras.index(x)], horalista[historicocompras.index(x)], '\n')
-            print('1-Voltar')
-
-            escolha = int(input('Escolha um número pra navegar:'))
-
-            if escolha == 1:
-                extrato()
-            else:
-                print('error!!!')
-                menu()
+        if escolha == 1:
+            extrato()
+        else:
+            print('error!!!')
+            extrato()
 
     elif escolha == 2:
         traco()
         print('HISTÓRICO(DEPOSITOS):\n')
         
-        for x in historicodepositos:
-            print('-- R$', x)
+        for y in range(len(historicodepositos[0])):
+            print('--nome:',historicodepositos[0][y][0],'--Preço depositado:R$',historicodepositos[0][y][1])
         print('1-Voltar')
         traco()
 
