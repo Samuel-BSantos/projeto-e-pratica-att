@@ -21,8 +21,8 @@ def historicodep(pre):
     historicodepositos[0].append(deposito)
 
 
-def historico(pre,des):
-    compras = [nome[0],pre,des,datetime.now().hour]
+def historico(ind,pre,des):
+    compras = [nome[ind],pre,des,datetime.now().hour]
 
     historicocompras[0].append(compras)
 
@@ -233,7 +233,7 @@ def conta():
         trocar_posicoes(historicodepositos,0,posicaolista)
         trocar_posicoes(cpf,0,posicaolista)
 
-        print('troacando conta...')
+        print('trocando conta...')
         sleep(2)
         print('Conta trocada com sucesso! voltando ao menu...')
         sleep(4)
@@ -244,8 +244,8 @@ def conta():
         localconta = input('Digite o CPF da conta que deseja alterar:')
 
         indexconta = cpf.index(localconta)
-
-        print(f'Alterando conta de{nome[indexconta]}:\n',
+        traco()
+        print(f'Alterando conta de {nome[indexconta]}:\n',
             'Escolha a opcção que deseja alterar:\n',
             '1-Nome\n',
             '2-CPF\n',
@@ -305,7 +305,7 @@ def conta():
 def pix():
     traco()
     print(f"{'TRANFERÊNCIA':^40}")
-    print(f"{'Saldo atual: R$':>40}{saldolista[0]}")
+    print(f"{'Saldo atual: R$':>20}{saldolista[0]}")
     print('''
     1-Realizar tranferência
     2-Voltar''')
@@ -318,26 +318,48 @@ def pix():
 
         if saldolista[0] > compra:
             destinatario = input('Digite o nome do destinatário:')
-            cpfimg = input('Digite o cpf do destinatário')
+            cpfimg = input('Digite o cpf do destinatário:')
+
+            if destinatario not in nome:
+                print('essa conta não existe! voltando ao menu Tranferência...')
+                sleep(3)
+                pix()
             
             if cpfimg in cpf:
                 destinatariosistema = nome.index(destinatario)
                 saldolista[destinatariosistema] = saldolista[destinatariosistema] + compra
             else:
-                print('Essa conta n existe! voltando ao menu tranferência...')
+                print('Essa conta não existe! voltando ao menu tranferência...')
                 sleep(3)
+                pix()
 
             historico(compra,destinatario)
+
+            trocar_posicoes(nome,0,destinatariosistema)
+            trocar_posicoes(numeroconta,0,destinatariosistema)
+            trocar_posicoes(saldolista,0,destinatariosistema)
+            trocar_posicoes(historicocompras,0,destinatariosistema)
+            trocar_posicoes(historicodepositos,0,destinatariosistema)
+            trocar_posicoes(cpf,0,destinatariosistema)
+
+            historico(destinatariosistema,compra,destinatario)
+
+            trocar_posicoes(nome,0,destinatariosistema)
+            trocar_posicoes(numeroconta,0,destinatariosistema)
+            trocar_posicoes(saldolista,0,destinatariosistema)
+            trocar_posicoes(historicocompras,0,destinatariosistema)
+            trocar_posicoes(historicodepositos,0,destinatariosistema)
+            trocar_posicoes(cpf,0,destinatariosistema)
 
             saldolista[0] = saldolista[0] - compra
 
             print('Compra realizada! :D')
-            traco()
+            sleep(2)
             pix()
         
         elif saldolista[0] < compra:
             print('Saldo insufuciente para essa compra :(')
-            traco()
+            sleep(3)
             pix()
 
         
@@ -346,13 +368,14 @@ def pix():
         menu()
     
     else:
-        print('error!!!')
+        print('digite uma opção válida! voltando ao menu TRANFERÊNCIA...')
+        sleep(3)
         menu()
 
 def depositar():
     traco()
-    print('DEPOSITO:\n',
-       '1-Depositar em sua conta\n',
+    print(f"{'DEPÓSITO':^40}")
+    print('1-Depositar em sua conta\n',
         '2-Voltar\n')
     traco()
     escolha = input('Escolha um número pra navegar:')
@@ -365,41 +388,35 @@ def depositar():
         historicodep(deposito)
 
         print('Valor depositado! :D\n')
-        print('1-Voltar')
-        traco()
-
-        escolha = int(input('Escolha um número pra navegar:'))
-        
-        if escolha == '1':
-            depositar()
-        
-        else:
-            print('erro!')
-            menu()
+        sleep(1)
+        print('voltando ao menu TRANFERÊNCIA...')
+        sleep(2)
+        pix()
 
     elif escolha == '2':
         #Voltar
         menu()
     
     else:
-        print('error!!!')
-        menu()
+        print('digite uma opção válida! voltanDO ao menu TRANFERÊNCIA...')
+        sleep(3)
+        pix()
 
 def extrato():
     traco()
-    print('EXTRATO:\n',
-        '1-Histórico de compras\n',
+    print(f"{'EXTRATO':^40}")
+    print('1-Histórico de compras\n',
         '2-Histórico de depositos\n',
         '3-Voltar\n')
     traco()
     escolha = input('Escolha um número pra navegar:')
 
     if escolha == '1':
-        print('HISTÓRICO(COMPRAS):\n')
+        print(f"{'HISTÓRICO(TRANSFERÊNCIAS)':^40}")
         traco()
         
         for y in range(len(historicocompras[0])):
-            print('--nome:',historicocompras[0][y][0],'--Preço:R$',historicocompras[0][y][1],'--destinatário:',historicocompras[0][y][2],'--data:',historicocompras[0][y][3])
+            print('|nome:',historicocompras[0][y][0],'||Preço:R$',historicocompras[0][y][1],'||destinatário:',historicocompras[0][y][2],'||data(horas):',historicocompras[0][y][3], '|\n')
         
         print('\n\n1-Voltar')
         traco()
@@ -408,7 +425,8 @@ def extrato():
         if escolha == '1':
             extrato()
         else:
-            print('error!!!')
+            print('digite uma opção válida! voltando ao menu EXTRATO...')
+            sleep(3)
             extrato()
 
     elif escolha == '2':
@@ -416,7 +434,7 @@ def extrato():
         print('HISTÓRICO(DEPOSITOS):\n')
         
         for y in range(len(historicodepositos[0])):
-            print('--nome:',historicodepositos[0][y][0],'--Preço depositado:R$',historicodepositos[0][y][1])
+            print('|nome:',historicodepositos[0][y][0],'||Preço depositado:R$',historicodepositos[0][y][1],'||data(horas):',historicodepositos[0][y][2],'|\n')
         print('1-Voltar')
         traco()
 
