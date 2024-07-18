@@ -32,17 +32,35 @@ def trocar_posicoes(lista, pos1, pos2):
 
 def menuinicial():
     traco()
-    print("Crie uma conta para iniciar o sistema:")
-    print("1-Cadastrar")
-    traco()
+    print("Crie uma conta de ADM para iniciar o sistema:")
+    print("1-Criar conta adm")
 
     escolha = input('Escolha um número pra navegar:')
+    
 
     if escolha == '1':
+        contaadm()
+
+    else:
+        print('Para usar o sistema crie uma conta ADM!')
+        sleep(3)    
+        menuinicial()
+
+def contaadm():
+    traco()
+    print('primeiro crie uma senha para sua conta adm\n')
+    senha = input('senha de adm: ')
+    print('\nsenha criada, agora confirme a senha para entrar no sistema ;)')
+    sleep(3)
+    print('\n\n')
+    traco()
+    confirmar = input('confirme sua senha para começar o sistema: ')
+
+    if confirmar == senha:
         cadastroinicial()
 
     else:
-        print('digite um número que tenha nas opções')
+        print('Senha incorreta, tente novamente!')
         sleep(2)
         menuinicial()
 
@@ -81,8 +99,8 @@ def menu():
         
 def cadastroinicial():
     traco()
-    print('CADASTRO:\n',
-            '1-Adicionar conta')
+    print('Agora adicione a primeira conta do sistema:\n',
+        '1-Adicionar conta')
     traco()
     escolha = input('Escolha um número pra navegar:')
     
@@ -90,8 +108,20 @@ def cadastroinicial():
     if escolha == '1':
         traco()
         name = input('Nome:')
-        cpfa = input('CPF:')
-        numeroc = input('Número da conta:')
+        cpfa = input('CPF(apenas números e 11 dígitos):')
+        
+        try:
+            numeroc = int(input('Número da conta:'))
+        except:
+            print('Não se usa letras no seu número de conta!')
+            sleep(2)
+            cadastroinicial()
+
+        if len(cpfa) != 11:
+            print('digite um cpf válido!')
+            sleep(1)
+            cadastroinicial()
+
         traco()
 
         saldolista.append(0)
@@ -103,9 +133,9 @@ def cadastroinicial():
         menu()
     
     else:
-        print('digite um perfil válido!')
-        sleep(2)
-        menuinicial()
+        print('Você precisa adicionar a primeira conta do sistema para usa-lo!')
+        sleep(3)
+        cadastroinicial()
 
 def cadastro():
     traco()
@@ -281,7 +311,7 @@ def conta():
             'Nome:',nome[0],'\n',
             'CPF:',cpf[0],'\n',
             'Número da conta:',numeroconta[0],'\n',
-            'Saldo:',saldolista[0],'\n\n',
+            'Saldo: R$',saldolista[0],'\n\n',
             '1-Voltar')
         traco()
         escolha = input('Escolha um número pra navegar:')
@@ -333,7 +363,7 @@ def pix():
                 sleep(3)
                 pix()
 
-            historico(compra,destinatario)
+            historico(0,compra,destinatario)
 
             trocar_posicoes(nome,0,destinatariosistema)
             trocar_posicoes(numeroconta,0,destinatariosistema)
@@ -353,7 +383,7 @@ def pix():
 
             saldolista[0] = saldolista[0] - compra
 
-            print('Compra realizada! :D')
+            print('Transferência realizada! :D')
             sleep(2)
             pix()
         
@@ -443,13 +473,15 @@ def extrato():
         if escolha == '1':
             extrato()
         else:
-            print('error!!!')
-            menu()
+            print('escolha uma opção válida!!! voltando ao menu EXTRATO...')
+            sleep(3)
+            extrato()
     elif escolha == '3':
         #volta
         menu()
     else:
-        print('error!!!')
-        menu()
+        print('escolha uma opção válida!!! voltando ao menu EXTRATO...')
+        sleep(3)
+        extrato()
 
 menuinicial()
